@@ -10,8 +10,8 @@ Usage
 For any of this to work well, you need some global code running. You can do this by 
 [creating a hook](http://codeigniter.com/user_guide/general/hooks.html) or use 
 [MY_Controller](http://codeigniter.com/wiki/MY_Controller_-_how_to_extend_the_CI_Controller/). I take MY_Controller 
-one step further and have Public_Controller and Admin_Controller, which all of my controllers inherit to gain 
-shared logic for the frontend or the backend.
+one step further and have Public_Controller and Admin_Controller, from which all of my controllers inherit shared 
+logic for the frontend or the backend.
 
 ### Global methods
 
@@ -82,8 +82,6 @@ Requirements
 ------------
 
 Only CodeIgniter
-
-Optional: Modular Separation
 
 
 Extra
