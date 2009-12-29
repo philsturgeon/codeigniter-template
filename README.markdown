@@ -23,9 +23,9 @@ Use Parser for the layout and loaded views
 
     $this->template->enable_parser(FALSE); // default = TRUE
 
-Set a theme name and your layout will be loaded from application/themes/<theme_name>/views/<layout_name>.php 
+Set a theme name and your layout will be loaded from application/themes/theme_name/views/layout_name.php 
 
-    $this->template->set_theme('theme_name'); // default = TRUE
+    $this->template->set_theme('theme_name');
     $this->template->set_layout('layout_name');
     
 ### Per-page methods
@@ -54,7 +54,7 @@ and themes or just use global view folder.
     $this->template->set_partial('sidebar', 'partials/sidebar_view');
     
     // Don't search, use exactly what was provided
-    $this->template->set_partial('partial_name', 'partials/view_file', FALSE); // application/views/partials/sidebar_view.php
+    $this->template->set_partial('partial_name', 'partials/view_file', FALSE); // application/views/partials/view_file.php
 
 Set breadcrumbs
 
