@@ -100,7 +100,13 @@ class Template
         $template['title']			= $this->_title;
         $template['breadcrumbs']	= array();
         $template['metadata']		= implode("\n\t\t", $this->_metadata);
-        
+    
+    	$template['partials'] = array();
+    	foreach( $this->_partials as $name => $partial )
+    	{
+    		$template['partials'][$name] = $this->_load_view( $partial['view'] , $partial['search']);
+    	}
+    	
         $this->data->template =& $template;
         
         ##### DEPRECATED!! #################################################
@@ -123,15 +129,9 @@ class Template
 
         // Let CI do the caching instead of the browser
         $this->CI->output->cache( $this->cache_lifetime );
-
-        // Test to see if this file 
-    	$this->_body = $this->_load_view( $view );
     	
-    	$template['partials'] = array();
-    	foreach( $this->_partials as $name => $partial )
-    	{
-    		$template['partials'][$name] = $this->_load_view( $partial['view'] , $partial['search']);
-    	}
+        // Test to see if this file
+    	$this->_body = $this->_load_view( $view );
     	
         // Want this file wrapped with a layout file?
         if( $this->_layout )
