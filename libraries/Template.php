@@ -320,6 +320,11 @@ class Template {
 	 * this method returns the value of the partial
 	 * in order for you to perform your own logic
 	 * on it, caching for instance.
+	 *
+	 * WARNING: Any variables pushed to the template
+	 * library after this point will NOT be available
+	 * in the specified partial, as it is parsed
+	 * immediately!
 	 * 
 	 * @author	Per Sikker Hansen <lord@heavenquake.net>
 	 * @access	public
@@ -340,6 +345,11 @@ class Template {
 	 * return_partial(), but possible to use for
 	 * other purposes. Injects the data directly
 	 * into the partial tree.
+	 *
+	 * WARNING: Any variables pushed to the template
+	 * library after the injection will NOT be
+	 * available in the data you have injected as
+	 * the data is already parsed!
 	 *
 	 * @author	Per Sikker Hansen <lord@heavenquake.net>
 	 * @access	public
