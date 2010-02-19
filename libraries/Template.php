@@ -87,7 +87,7 @@ class Template
      */
     public function build($view = '', $data = array(), $return = FALSE)
     {
-		// Set whatever values are given. These will be available to all view files
+	// Set whatever values are given. These will be available to all view files
     	$this->CI->load->vars($data);
     	unset($data);
     	
@@ -351,8 +351,16 @@ class Template
     		
     		if( $this->_theme && file_exists( APPPATH . $theme_view . EXT ))
 	    	{
-	    		$this->CI->load->library('parser');
-	    		return $this->CI->parser->parse('../'.$theme_view, $this->data, TRUE);
+	    		if($this->_parser_enabled === TRUE)
+			{
+				$this->CI->load->library('parser');
+				return $this->CI->parser->parse( '../'.$theme_view, $this->data, TRUE );
+			}
+				
+			else
+			{
+				return $this->CI->load->view( '../'.$theme_view, $this->data, TRUE );
+			}
 	    	}
 
 		// Nope, just use whatever's in the module
