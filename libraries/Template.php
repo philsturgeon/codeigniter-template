@@ -7,7 +7,7 @@
  * @package        CodeIgniter
  * @author        Rick Ellis
  * @copyright    Copyright (c) 2006, EllisLab, Inc.
- * @license        http://www.codeignitor.com/user_guide/license.html
+ * @license        http://www.codeigniter.com/user_guide/license.html
  * @link        http://www.codeigniter.com
  * @since        Version 1.0
  * @filesource
@@ -138,35 +138,35 @@ class Template
         {
 	        ##### DEPRECATED!! #################################################
 	        ## TODO: Nuke these variables and replace with $template
-			$this->data->page_output = $this->_body;
-			####################################################################
+		$this->data->page_output = $this->_body;
+		####################################################################
 			
-			$template['body'] = $this->_body;
-			
-			// If using a theme, use the layout in the theme
-			if( $this->_theme )
-			{
-				// If directory is set, use it
-				$this->data->theme_view_folder = '../themes/'.$this->_theme.'/views/';
-	            $layout_view = $this->data->theme_view_folder.$this->_layout;
-			}
-            
-			// Otherwise use whatever is given
-			else
-			{
-				$layout_view = $this->_layout;
-			}
-			
-			// Parse if parser is enabled, or its a theme view
-			if($this->_parser_enabled === TRUE || $this->_theme)
-			{
-				$this->_body = $this->CI->parser->parse( $layout_view, $this->data, TRUE );
-			}
-			
-			else
-			{
-				$this->_body = $this->CI->load->view( $layout_view, $this->data, TRUE );
-			}
+		$template['body'] = $this->_body;
+		
+		// If using a theme, use the layout in the theme
+		if( $this->_theme )
+		{
+			// If directory is set, use it
+			$this->data->theme_view_folder = '../themes/'.$this->_theme.'/views/';
+            		$layout_view = $this->data->theme_view_folder.$this->_layout;
+		}
+    
+		// Otherwise use whatever is given
+		else
+		{
+			$layout_view = $this->_layout;
+		}
+		
+		// Parse if parser is enabled, or its a theme view
+		if($this->_parser_enabled === TRUE || $this->_theme)
+		{
+			$this->_body = $this->CI->parser->parse( $layout_view, $this->data, TRUE );
+		}
+		
+		else
+		{
+			$this->_body = $this->CI->load->view( $layout_view, $this->data, TRUE );
+		}
         }
         
         // Want it returned or output to browser?
@@ -296,7 +296,15 @@ class Template
         return $this;
     }
     
-    
+    /**
+     * Set a view partial
+     *
+     * @access    public
+     * @param     string
+     * @param     string
+     * @param     boolean
+     * @return    void
+     */
     public function set_partial( $name, $view, $search = TRUE )
     {
     	$this->_partials[$name] = array('view' => $view, 'search' => $search);
@@ -324,7 +332,7 @@ class Template
      * Should be parser be used or the view files just loaded normally?
      *
      * @access    public
-     * @param     string	$view
+     * @param     boolean
      * @return    void
      */
     public function enable_parser($bool)
@@ -347,19 +355,19 @@ class Template
 	    		return $this->CI->parser->parse('../'.$theme_view, $this->data, TRUE);
 	    	}
 
-		    // Nope, just use whatever's in the module
+		// Nope, just use whatever's in the module
 	    	else
 	    	{
 	    		if($this->_parser_enabled === TRUE)
-				{
-					$this->CI->load->library('parser');
-					return $this->CI->parser->parse( $this->_module.'/'.$view, $this->data, TRUE );
-				}
+			{
+				$this->CI->load->library('parser');
+				return $this->CI->parser->parse( $this->_module.'/'.$view, $this->data, TRUE );
+			}
 				
-				else
-				{
-					return $this->CI->load->view( $this->_module.'/'.$view, $this->data, TRUE );
-				}
+			else
+			{
+				return $this->CI->load->view( $this->_module.'/'.$view, $this->data, TRUE );
+			}
 	    	}
     	}
     	
@@ -367,15 +375,15 @@ class Template
     	else
     	{
     		if($this->_parser_enabled === TRUE)
-			{
-				$this->CI->load->library('parser');
-				return $this->CI->parser->parse( $view, $this->data, TRUE );
-			}
+		{
+			$this->CI->load->library('parser');
+			return $this->CI->parser->parse( $view, $this->data, TRUE );
+		}
 			
-			else
-			{
-				return $this->CI->load->view( $view, $this->data, TRUE );
-			}
+		else
+		{
+			return $this->CI->load->view( $view, $this->data, TRUE );
+		}
     	}
     }
 
