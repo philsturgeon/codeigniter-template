@@ -53,8 +53,7 @@ class Template {
 
 	private $CI;
 	
-	// DEPRECATED: TODO kill it
-	var $data;
+	private $data = array();
 
 	/**
 	 * Constructor - Calls the CI instance and sets a debug message
