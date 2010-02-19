@@ -332,8 +332,9 @@ class Template {
 	 * @param	boolean
 	 * @return	string
 	 */
-	public function return_partial( $view, $search )
+	public function return_partial( $view, $data = array(), $search = TRUE )
 	{
+		$this->data = array_merge($this->data, $data);
 		return $this->_load_view( $view, $search );
 	}
 
