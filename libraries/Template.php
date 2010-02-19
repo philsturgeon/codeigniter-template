@@ -40,6 +40,7 @@ class Template {
 	private $_view = '';
 	
 	private $_partials = array();
+	private $_injected = array();
 	
 	private $_breadcrumbs = array();
 
@@ -97,11 +98,11 @@ class Template {
 		}
 
 		// Output template variables to the template
-		$template['title']			= $this->_title;
+		$template['title']		= $this->_title;
 		$template['breadcrumbs']	= array();
 		$template['metadata']		= implode("\n\t\t", $this->_metadata);
 	
-		$template['partials'] = array();
+		$template['partials'] = $this->_injected; //start out with the injected data, if any
 		foreach( $this->_partials as $name => $partial )
 		{
 			$template['partials'][$name] = $this->_load_view( $partial['view'] , $partial['search']);
@@ -112,8 +113,8 @@ class Template {
 		##### DEPRECATED!! #################################################
 		## TODO: Nuke these variables
 		// Set the basic defaults
-		$this->data->page_title				= $template['title'];
-		$this->data->breadcrumbs			= $template['breadcrumbs'];
+		$this->data->page_title			= $template['title'];
+		$this->data->breadcrumbs		= $template['breadcrumbs'];
 		$this->data->extra_head_content		= $template['metadata'];
 		####################################################################
 		
@@ -308,6 +309,47 @@ class Template {
 	public function set_partial( $name, $view, $search = TRUE )
 	{
 		$this->_partials[$name] = array('view' => $view, 'search' => $search);
+		return $this;
+	}
+
+
+	/**
+	 * Returns a partial
+	 *
+	 * Instead of evaluating the partial internally
+	 * this method returns the value of the partial
+	 * in order for you to perform your own logic
+	 * on it, caching for instance.
+	 * 
+	 * @author	Per Sikker Hansen <lord@heavenquake.net>
+	 * @access	public
+	 * @param	string
+	 * @param	boolean
+	 * @return	string
+	 */
+	public function return_partial( $view, $search )
+	{
+		return $this->_load_view( $view, $search );
+	}
+
+
+	/**
+	 * Inject output data directly
+	 *
+	 * Intended for use with data prepped after
+	 * return_partial(), but possible to use for
+	 * other purposes. Injects the data directly
+	 * into the partial tree.
+	 *
+	 * @author	Per Sikker Hansen <lord@heavenquake.net>
+	 * @access	public
+	 * @param	string
+	 * @param	string
+	 * @return	void
+	 */
+	public function inject_partial( $name, $data )
+	{
+		$this->_injected[$name] = $data;
 		return $this;
 	}
 
