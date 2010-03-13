@@ -101,13 +101,13 @@ class Template {
 		$template['breadcrumbs']	= array();
 		$template['metadata']		= implode("\n\t\t", $this->_metadata);
 	
+		$this->data->template =& $template;
+		
 		$template['partials'] = $this->_injected; //start out with the injected data, if any
 		foreach( $this->_partials as $name => $partial )
 		{
 			$template['partials'][$name] = $this->_load_view( $partial['view'] , $partial['search']);
 		}
-		
-		$this->data->template =& $template;
 		
 		// Disable sodding IE7's constant cacheing!!
 		$this->_ci->output->set_header('HTTP/1.0 200 OK');
