@@ -159,11 +159,11 @@ class Template
 			// If using a theme, use the layout in the theme
 			foreach ($this->_theme_locations as $location => $offset)
 			{
-				if( $this->_theme && file_exists($location.$this->_theme.'/views/' . $this->_layout.EXT))
+				if( $this->_theme && file_exists($location.$this->_theme.'/views/layouts/' . $this->_layout.EXT))
 				{
 					// If directory is set, use it
 					$this->data['theme_view_folder'] = $offset.$this->_theme.'/views/';
-					$layout_view = $this->data['theme_view_folder'].$this->_layout;
+					$layout_view = $this->data['theme_view_folder'] . 'layouts/' . $this->_layout;
 
 					break;
 				}
@@ -295,7 +295,7 @@ class Template
 
 
 	/**
-	 * Which Template file are we using here?
+	 * Which theme layout should we using here?
 	 *
 	 * @access	public
 	 * @param	string	$view
@@ -450,6 +450,56 @@ class Template
 		}
 
 		return FALSE;
+	}
+
+    /**
+     * layout_exists
+     * Check if a theme layout exists
+     *
+     * @access    public
+     * @param     string	$view
+     * @return    array
+     */
+	public function theme_layout_exists($layout, $theme = NULL)
+	{
+		$theme || $theme = $this->_theme;
+
+		foreach ($this->_theme_locations as $location => $offset)
+		{
+			if( is_dir($location.$theme) )
+			{
+				return file_exists($location.$theme . '/views/layouts/' . $layout . EXT);
+			}
+		}
+
+		return FALSE;
+	}
+    /**
+     * layout_exists
+     * Check if a theme layout exists
+     *
+     * @access    public
+     * @param     string	$view
+     * @return    array
+     */
+	public function get_theme_layouts($theme = NULL)
+	{
+		$theme || $theme = $this->_theme;
+
+		$layouts = array();
+
+		foreach ($this->_theme_locations as $location => $offset)
+		{
+			if( is_dir($location.$theme) )
+			{
+				foreach(glob($location.$theme . '/views/layouts/*' . EXT) as $layout)
+				{
+					$layouts[] = basename($layout, EXT);
+				}
+			}
+		}
+
+		return $layouts;
 	}
 
     // A module view file can be overriden in a theme
