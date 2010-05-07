@@ -159,7 +159,7 @@ class Template
 			// If using a theme, use the layout in the theme
 			foreach ($this->_theme_locations as $location => $offset)
 			{
-				if( $this->_theme && file_exists($location.$this->_theme.'/views/layouts/' . $this->_layout.EXT))
+				if( $this->_theme && file_exists($location.$this->_theme.'/views/layouts/' . $this->_layout . self::_ext($this->_layout)))
 				{
 					// If directory is set, use it
 					$this->data['theme_view_folder'] = $offset.$this->_theme.'/views/';
@@ -420,7 +420,7 @@ class Template
 
     /**
      * theme_locations
-     * Should be parser be used or the view files just loaded normally?
+     * List the locations where themes may be stored
      *
      * @access    public
      * @param     string	$view
@@ -429,6 +429,19 @@ class Template
     public function theme_locations()
     {
         return $this->_theme_locations;
+    }
+
+    /**
+     * add_theme_location
+     * Set another location for themes to be looked in
+     *
+     * @access    public
+     * @param     string	$view
+     * @return    array
+     */
+    public function add_theme_location($location, $offset)
+    {
+        $this->_theme_locations[$location] = $offset;
     }
 
     /**
@@ -468,7 +481,7 @@ class Template
 		{
 			if( is_dir($location.$theme) )
 			{
-				return file_exists($location.$theme . '/views/layouts/' . $layout . EXT);
+				return file_exists($location.$theme . '/views/layouts/' . $layout . self::_ext($layout));
 			}
 		}
 
@@ -492,9 +505,9 @@ class Template
 		{
 			if( is_dir($location.$theme) )
 			{
-				foreach(glob($location.$theme . '/views/layouts/*' . EXT) as $layout)
+				foreach(glob($location.$theme . '/views/layouts/*.*') as $layout)
 				{
-					$layouts[] = basename($layout, EXT);
+					$layouts[] = pathinfo($layout, PATHINFO_BASENAME);
 				}
 			}
 		}
@@ -527,7 +540,7 @@ class Template
 			{
 				$theme_view = $this->_theme . '/views/modules/' . $this->_module . '/' . $view;
 
-				if( file_exists( $location . $theme_view . EXT ))
+				if( file_exists( $location . $theme_view . self::_ext($theme_view) ))
 				{
 					if($this->_parser_enabled === TRUE && $parse_view === TRUE)
 					{
@@ -587,6 +600,11 @@ class Template
 
         return $title;
     }
+
+	private function _ext($file)
+	{
+		return pathinfo($file, PATHINFO_EXTENSION) ? '' : EXT;
+	}
 
 }
 
