@@ -23,7 +23,7 @@ Use Parser for the layout and loaded views
 
     $this->template->enable_parser(FALSE); // default = TRUE
 
-Set a theme name and your layout will be loaded from application/themes/theme_name/views/layout_name.php 
+Set a theme name and your layout will be loaded from application/themes/theme_name/views/layouts/layout_name.php
 
     $this->template->set_theme('theme_name');
     $this->template->set_layout('layout_name');
@@ -87,5 +87,4 @@ Only CodeIgniter
 Extra
 -----
 
-If you'd like to request changes, report bug fixes, or contact
-the developer of this library, email <email@philsturgeon.co.uk>
+If you'd like to request changes or  report a big, please use the issue tracker.
