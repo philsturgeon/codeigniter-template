@@ -1,0 +1,28 @@
+h1. CHANGELOG
+
+h2. v1.4
+
+* Removed possibility of duplicate SEO entries, call set_metadata('keywords' twice and it will use the 2nd.
+* Re-did inject logic, now its just for shoving a hunk of HTML into a partial.
+* Fixed theme_exists(), it wasn't using slug name so falsly returned true.
+
+h2. v1.3
+
+You can now use any extension for your files, not just whatever EXT is set to.
+Updated Template library to add support for getting theme layout lists and checking they exist.
+Added more options to the default config file.
+Now supports a config file that allows a default theme to be set and "Theme locations" to be used. That means you could have application/themes as one and third_party/themes as another.
+
+h2. v1.2
+
+Hooked up breadcrumbs to  variable.
+Fixed undefined variable error by moving the reference assignment.
+
+h2. v1.1
+
+theme_view should support normal views as well
+Partials now supported in views, not just layout views.
+
+h2. v1.0
+
+Initial commit.
