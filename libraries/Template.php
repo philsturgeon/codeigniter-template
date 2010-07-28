@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -54,7 +54,7 @@ class Template
 
     private $_ci;
 
-    private $data = array();
+    private $_data = array();
 
 	/**
 	 * Constructor - Sets Preferences
@@ -112,6 +112,34 @@ class Template
     // --------------------------------------------------------------------
 
     /**
+     * Magic Get function to get data
+     *
+     * @access    public
+     * @param	  string
+     * @return    mixed
+     */
+	public function __get($name)
+	{
+		return isset($this->_data[$name]) ? $this->_data[$name] : NULL;
+	}
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Magic Set function to set data
+     *
+     * @access    public
+     * @param	  string
+     * @return    mixed
+     */
+	public function __set($name, $value)
+	{
+		$this->_data[$name] = $value;
+	}
+
+    // --------------------------------------------------------------------
+
+    /**
      * Set the mode of the creation
      *
      * @access    public
@@ -122,7 +150,10 @@ class Template
     public function build($view = '', $data = array(), $return = FALSE)
     {
 		// Set whatever values are given. These will be available to all view files
-    	$this->data = is_object($data) ? (array) $data : $data;
+    	is_array($data) OR $data = (array) $data;
+
+		// Merge in what we already have with the specific data
+		$this->_data = array_merge($this->_data, $data);
 
         if(empty($this->_title))
         {
@@ -136,7 +167,7 @@ class Template
     	$template['partials']	= array();
 
     	// Assign by reference, as all loaded views will need access to partials
-        $this->data['template'] =& $template;
+        $this->_data['template'] =& $template;
 
     	foreach( $this->_partials as $name => $partial )
     	{
@@ -151,7 +182,7 @@ class Template
 			{
 				if($this->_parser_enabled === TRUE)
 				{
-					$partial['string'] = $this->_ci->parser->parse_string($partial['string'], $this->data + $partial['data'], TRUE, TRUE);
+					$partial['string'] = $this->_ci->parser->parse_string($partial['string'], $this->_data + $partial['data'], TRUE, TRUE);
 				}
 
 				$template['partials'][$name] = $partial['string'];
@@ -183,8 +214,8 @@ class Template
 				if( $this->_theme && file_exists($location.$this->_theme.'/views/layouts/' . $this->_layout . self::_ext($this->_layout)))
 				{
 					// If directory is set, use it
-					$this->data['theme_view_folder'] = $offset.$this->_theme.'/views/';
-					$layout_view = $this->data['theme_view_folder'] . 'layouts/' . $this->_layout;
+					$this->_data['theme_view_folder'] = $offset.$this->_theme.'/views/';
+					$layout_view = $this->_data['theme_view_folder'] . 'layouts/' . $this->_layout;
 
 					break;
 				}
@@ -196,12 +227,12 @@ class Template
 			// Parse if parser is enabled, or its a theme view
 			if($this->_parser_enabled === TRUE || $this->_theme)
 			{
-				$this->_body = $this->_ci->parser->parse($layout_view, $this->data, TRUE, TRUE);
+				$this->_body = $this->_ci->parser->parse($layout_view, $this->_data, TRUE, TRUE);
 			}
 
 			else
 			{
-				$this->_body = $this->_ci->load->view($layout_view, $this->data, TRUE);
+				$this->_body = $this->_ci->load->view($layout_view, $this->_data, TRUE);
 			}
         }
 
@@ -506,12 +537,12 @@ class Template
     	{
     		if($this->_parser_enabled === TRUE && $parse_view === TRUE)
 			{
-				return $this->_ci->parser->parse( $view, $this->data, TRUE );
+				return $this->_ci->parser->parse( $view, $this->_data, TRUE );
 			}
 
 			else
 			{
-				return $this->_ci->load->view( $view, $this->data, TRUE );
+				return $this->_ci->load->view( $view, $this->_data, TRUE );
 			}
     	}
 
@@ -526,12 +557,12 @@ class Template
 				{
 					if($this->_parser_enabled === TRUE && $parse_view === TRUE)
 					{
-						return $this->_ci->parser->parse( $offset.$theme_view, $this->data, TRUE );
+						return $this->_ci->parser->parse( $offset.$theme_view, $this->_data, TRUE );
 					}
 
 					else
 					{
-						return $this->_ci->load->view( $offset.$theme_view, $this->data, TRUE );
+						return $this->_ci->load->view( $offset.$theme_view, $this->_data, TRUE );
 					}
 				}
 			}
@@ -540,12 +571,12 @@ class Template
 		// Not found it yet? Just load, its either in the module or root view
 		if($this->_parser_enabled === TRUE && $parse_view === TRUE)
 		{
-			return $this->_ci->parser->parse( $this->_module.'/'.$view, $this->data, TRUE );
+			return $this->_ci->parser->parse( $this->_module.'/'.$view, $this->_data, TRUE );
 		}
 
 		else
 		{
-			return $this->_ci->load->view( $this->_module.'/'.$view, $this->data, TRUE );
+			return $this->_ci->load->view( $this->_module.'/'.$view, $this->_data, TRUE );
 		}
 
     }
