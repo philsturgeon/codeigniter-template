@@ -32,7 +32,8 @@ class Template
     private $_controller = '';
     private $_method = '';
 
-    private $_theme = '';
+    private $_theme = NULL;
+    private $_theme_path = NULL;
     private $_layout = FALSE; // By default, dont wrap the view with anything
 
     private $_title = '';
@@ -211,11 +212,11 @@ class Template
 			// If using a theme, use the layout in the theme
 			foreach ($this->_theme_locations as $location => $offset)
 			{
-				if( $this->_theme && file_exists($location.$this->_theme.'/views/layouts/' . $this->_layout . self::_ext($this->_layout)))
+				if( $this->_theme && file_exists($location.$this->_theme.'/views/layouts/'.$this->_layout.self::_ext($this->_layout)))
 				{
 					// If directory is set, use it
 					$this->_data['theme_view_folder'] = $offset.$this->_theme.'/views/';
-					$layout_view = $this->_data['theme_view_folder'] . 'layouts/' . $this->_layout;
+					$layout_view = $this->_data['theme_view_folder'].'layouts/'.$this->_layout;
 
 					break;
 				}
@@ -336,10 +337,30 @@ class Template
 	 * @param	string	$theme	Set a theme for the template library to use
 	 * @return	void
 	 */
-	public function set_theme($theme = '')
+	public function set_theme($theme = NULL)
 	{
 		$this->_theme = $theme;
+		foreach ($this->_theme_locations as $location => $offset)
+		{
+			if( $this->_theme && file_exists($location.$this->_theme))
+			{
+				$this->_theme_path = rtrim($offset.$this->_theme.'/');
+				break;
+			}
+		}
+		
 		return $this;
+	}
+
+	/**
+	 * Get the current theme path
+	 *
+	 * @access	public
+	 * @return	string The current theme path
+	 */
+	public function get_theme_path()
+	{
+		return $this->_theme_path;
 	}
 
 
@@ -616,7 +637,6 @@ class Template
 	{
 		return pathinfo($file, PATHINFO_EXTENSION) ? '' : EXT;
 	}
-
 }
 
 // END Template class
