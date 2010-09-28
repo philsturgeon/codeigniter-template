@@ -74,7 +74,7 @@ class Template
         log_message('debug', 'Template class Initialized');
 
     	// Work out the controller and method
-    	if( method_exists( $this->_ci->router, 'fetch_module' ) )
+    	if ( method_exists( $this->_ci->router, 'fetch_module' ) )
     	{
     		$this->_module 	= $this->_ci->router->fetch_module();
     	}
@@ -99,7 +99,7 @@ class Template
 			$this->{'_'.$key} = $val;
 		}
 
-		if(empty($this->_theme_locations))
+		if (empty($this->_theme_locations))
 		{
 			$this->_theme_locations = array(APPPATH . 'themes/' => '../themes/');
 		}
@@ -156,7 +156,7 @@ class Template
 		// Merge in what we already have with the specific data
 		$this->_data = array_merge($this->_data, $data);
 
-        if(empty($this->_title))
+        if (empty($this->_title))
         {
         	$this->_title = $this->_guess_title();
         }
@@ -172,23 +172,25 @@ class Template
 
     	foreach( $this->_partials as $name => $partial )
     	{
-			// If its an array, use details to find it.
+			// We can only work with data arrays
+			is_object($partial['data']) AND $partial['data'] = (array) $partial['data'];
+
+			// If it uses a view, load it
     		if (isset($partial['view']))
 			{
-				$template['partials'][$name] = $this->_load_view($partial['view'], $partial['search']);
+				$template['partials'][$name] = $this->_load_view($partial['view'], $partial['data']);
 			}
 
-			// Otherwise, jam that bloody string in!
+			// Otherwise the partial must be a string
 			else
 			{
-				if($this->_parser_enabled === TRUE)
+				if ($this->_parser_enabled === TRUE)
 				{
 					$partial['string'] = $this->_ci->parser->parse_string($partial['string'], $this->_data + $partial['data'], TRUE, TRUE);
 				}
 
 				$template['partials'][$name] = $partial['string'];
 			}
-
     	}
 
         // Disable sodding IE7's constant cacheing!!
@@ -202,17 +204,17 @@ class Template
         $this->_ci->output->cache( $this->cache_lifetime );
 
         // Test to see if this file
-    	$this->_body = $this->_load_view( $view, TRUE, $this->_parser_body_enabled );
+    	$this->_body = $this->_load_view( $view, array(), $this->_parser_body_enabled );
 
         // Want this file wrapped with a layout file?
-        if( $this->_layout )
+        if ( $this->_layout )
         {
 			$template['body'] = $this->_body;
 
 			// If using a theme, use the layout in the theme
 			foreach ($this->_theme_locations as $location => $offset)
 			{
-				if( $this->_theme && file_exists($location.$this->_theme.'/views/layouts/'.$this->_layout.self::_ext($this->_layout)))
+				if ( $this->_theme && file_exists($location.$this->_theme.'/views/layouts/'.$this->_layout.self::_ext($this->_layout)))
 				{
 					// If directory is set, use it
 					$this->_data['theme_view_folder'] = $offset.$this->_theme.'/views/';
@@ -223,24 +225,17 @@ class Template
 			}
 
 			// No theme layout file was found, lets use whatever they gave us
-			isset($layout_view) || $layout_view = $this->_layout;
+			isset($layout_view) OR $layout_view = $this->_layout;
 
 			// Parse if parser is enabled, or its a theme view
-			if($this->_parser_enabled === TRUE || $this->_theme)
-			{
-				$this->_body = $this->_ci->parser->parse($layout_view, $this->_data, TRUE, TRUE);
-			}
-
-			else
-			{
-				$this->_body = $this->_ci->load->view($layout_view, $this->_data, TRUE);
-			}
+			$this->_body = $this->_parser_enabled === TRUE OR $this->_theme
+				? $this->_ci->parser->parse($layout_view, $this->_data, TRUE, TRUE)
+				: $this->_ci->load->view($layout_view, $this->_data, TRUE);
         }
 
         // Want it returned or output to browser?
-        if(!$return)
+        if (!$return)
         {
-            // Send it to output
             $this->_ci->output->set_output($this->_body);
         }
 
@@ -258,7 +253,7 @@ class Template
     public function title()
     {
     	// If we have some segments passed
-    	if($title_segments =& func_get_args())
+    	if ($title_segments =& func_get_args())
     	{
     		$this->_title = implode($this->_title_separator, $title_segments);
     	}
@@ -310,7 +305,7 @@ class Template
         $content = htmlspecialchars(strip_tags($content));
 
         // Keywords with no comments? ARG! comment them
-        if($name == 'keywords' && !strpos($content, ','))
+        if ($name == 'keywords' && !strpos($content, ','))
         {
         	$content = preg_replace('/[\s]+/', ', ', trim($content));
         }
@@ -342,13 +337,13 @@ class Template
 		$this->_theme = $theme;
 		foreach ($this->_theme_locations as $location => $offset)
 		{
-			if( $this->_theme && file_exists($location.$this->_theme))
+			if ( $this->_theme && file_exists($location.$this->_theme))
 			{
 				$this->_theme_path = rtrim($offset.$this->_theme.'/');
 				break;
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -386,9 +381,9 @@ class Template
 	 * @param	boolean
 	 * @return	void
 	 */
-	public function set_partial($name, $view, $search = TRUE)
+	public function set_partial($name, $view, $data = array())
 	{
-		$this->_partials[$name] = array('view' => $view, 'search' => $search);
+		$this->_partials[$name] = array('view' => $view, 'data' => $data);
 		return $this;
 	}
 
@@ -487,11 +482,11 @@ class Template
      */
 	public function theme_exists($theme = NULL)
 	{
-		$theme || $theme = $this->_theme;
+		$theme OR $theme = $this->_theme;
 
 		foreach ($this->_theme_locations as $location => $offset)
 		{
-			if( is_dir($location.$theme) )
+			if ( is_dir($location.$theme) )
 			{
 				return TRUE;
 			}
@@ -514,7 +509,7 @@ class Template
 
 		foreach ($this->_theme_locations as $location => $offset)
 		{
-			if( is_dir($location.$theme) )
+			if ( is_dir($location.$theme) )
 			{
 				return file_exists($location.$theme . '/views/layouts/' . $layout . self::_ext($layout));
 			}
@@ -538,7 +533,7 @@ class Template
 
 		foreach ($this->_theme_locations as $location => $offset)
 		{
-			if( is_dir($location.$theme) )
+			if ( is_dir($location.$theme) )
 			{
 				foreach(glob($location.$theme . '/views/layouts/*.*') as $layout)
 				{
@@ -551,55 +546,34 @@ class Template
 	}
 
     // A module view file can be overriden in a theme
-    private function _load_view($view = '', $search = TRUE, $parse_view = TRUE)
+    private function _load_view($view, array $data, $parse_view = TRUE)
     {
-    	// Load exactly what we asked for, no f**king around!
-    	if($search !== TRUE)
-    	{
-    		if($this->_parser_enabled === TRUE && $parse_view === TRUE)
-			{
-				return $this->_ci->parser->parse( $view, $this->_data, TRUE );
-			}
-
-			else
-			{
-				return $this->_ci->load->view( $view, $this->_data, TRUE );
-			}
-    	}
-
 		// Only bother looking in themes if there is a theme
-		if($this->_theme != '')
+		if ($this->_theme != '')
 		{
 			foreach ($this->_theme_locations as $location => $offset)
 			{
-				$theme_view = $this->_theme . '/views/modules/' . $this->_module . '/' . $view;
+				$theme_views = array(
+					$this->_theme . '/views/modules/' . $this->_module . '/' . $view,
+					$this->_theme . '/views/' . $view
+				);
 
-				if( file_exists( $location . $theme_view . self::_ext($theme_view) ))
+				foreach ($theme_views as $theme_view)
 				{
-					if($this->_parser_enabled === TRUE && $parse_view === TRUE)
+					if (file_exists($location . $theme_view . self::_ext($theme_view)))
 					{
-						return $this->_ci->parser->parse( $offset.$theme_view, $this->_data, TRUE );
-					}
-
-					else
-					{
-						return $this->_ci->load->view( $offset.$theme_view, $this->_data, TRUE );
+						return $this->_parser_enabled === TRUE && $parse_view === TRUE
+							? $this->_ci->parser->parse( $offset.$theme_view, $this->_data + $data, TRUE )
+							: $this->_ci->load->view( $offset.$theme_view, $this->_data + $data, TRUE );
 					}
 				}
 			}
 		}
 
 		// Not found it yet? Just load, its either in the module or root view
-		if($this->_parser_enabled === TRUE && $parse_view === TRUE)
-		{
-			return $this->_ci->parser->parse( $this->_module.'/'.$view, $this->_data, TRUE );
-		}
-
-		else
-		{
-			return $this->_ci->load->view( $this->_module.'/'.$view, $this->_data, TRUE );
-		}
-
+		return $this->_parser_enabled === TRUE && $parse_view === TRUE
+			? $this->_ci->parser->parse($view, $this->_data + $data, TRUE )
+			: $this->_ci->load->view($view, $this->_data + $data, TRUE );
     }
 
     private function _guess_title()
@@ -610,19 +584,19 @@ class Template
         $title_parts = array();
 
         // If the method is something other than index, use that
-        if($this->_method != 'index')
+        if ($this->_method != 'index')
         {
         	$title_parts[] = $this->_method;
         }
 
         // Make sure controller name is not the same as the method name
-        if(!in_array($this->_controller, $title_parts))
+        if (!in_array($this->_controller, $title_parts))
         {
         	$title_parts[] = $this->_controller;
         }
 
         // Is there a module? Make sure it is not named the same as the method or controller
-        if(!empty($this->_module) && !in_array($this->_module, $title_parts))
+        if (!empty($this->_module) && !in_array($this->_module, $title_parts))
         {
         	$title_parts[] = $this->_module;
         }

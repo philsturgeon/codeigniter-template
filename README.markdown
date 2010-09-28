@@ -60,8 +60,8 @@ and themes or just use global view folder.
 
     $this->template->set_partial('sidebar', 'partials/sidebar_view');
     
-    // Don't search, use exactly what was provided
-    $this->template->set_partial('partial_name', 'partials/view_file', FALSE); // application/views/partials/view_file.php
+    // Send extra data to a partial
+    $this->template->set_partial('partial_name', 'partials/view_file', array('foo' => 'bar');
 
 Set breadcrumbs
 
