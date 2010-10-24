@@ -147,7 +147,7 @@ class Template
     // --------------------------------------------------------------------
 
     /**
-     * Magic Set function to set data
+     * Set data using a chainable metod. Provide two strings or an array of data.
      *
      * @access    public
      * @param	  string
@@ -176,14 +176,14 @@ class Template
     // --------------------------------------------------------------------
 
     /**
-     * Set the mode of the creation
+     * Build the entire HTML output combining partials, layouts and views.
      *
      * @access    public
      * @param    string
 
      * @return    void
      */
-    public function build($view = '', $data = array(), $return = FALSE)
+    public function build($view, $data = array(), $return = FALSE)
     {
 		// Set whatever values are given. These will be available to all view files
     	is_array($data) OR $data = (array) $data;
@@ -325,7 +325,7 @@ class Template
         $content = htmlspecialchars(strip_tags($content));
 
         // Keywords with no comments? ARG! comment them
-        if ($name == 'keywords' AND !strpos($content, ','))
+        if ($name == 'keywords' AND ! strpos($content, ','))
         {
         	$content = preg_replace('/[\s]+/', ', ', trim($content));
         }
@@ -357,7 +357,7 @@ class Template
 		$this->_theme = $theme;
 		foreach ($this->_theme_locations as $location)
 		{
-			if ( $this->_theme AND file_exists($location.$this->_theme))
+			if ($this->_theme AND file_exists($location.$this->_theme))
 			{
 				$this->_theme_path = rtrim($location.$this->_theme.'/');
 				break;
@@ -589,6 +589,13 @@ class Template
      */
 	public function layout_exists($layout)
 	{
+		// If there is a theme, check it exists in there
+		if ( ! empty($this->_theme) AND in_array($layout, self::get_theme_layouts()))
+		{
+			return TRUE;
+		}
+
+		// Otherwise look in the normal places
 		return file_exists(self::_find_view_folder().'layouts/' . $layout . self::_ext($layout));
 	}
 
