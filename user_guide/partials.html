@@ -38,7 +38,7 @@
 <td id="breadcrumb">
 <a href="http://philsturgeon.co.uk/code/codeigniter-template">Template</a> &nbsp;&#8250;&nbsp;
 <a href="index.html">Documentation</a> &nbsp;&#8250;&nbsp;
-Layouts
+Partials
 </td>
 </tr>
 </table>
@@ -51,19 +51,25 @@ Layouts
 <div id="content">
 	<h1>Template</h1>
 
-	<h2>Layouts</h2>
+	<h2>Partials</h2>
 
 	<p>
-		Layouts in this library are very similar to layouts in Ruby on Rails and other frameworks. The basic idea is that most of your pages will share the same
-		header, footer, wrapping navigation, etc and only the actual body of the page will change. Using this logic you can avoid repeating yourself and having lots of similar HTML.
+		When you start creating multiple <a href="layouts.html">Layouts</a> you will soon start to realize that while they are not all the same they will share lots of stuff. Often the
+		header will be different but there could be two columns instead of one, etc.
 	</p>
 
 	<p>
-		All layouts exist in <dfn>application/views/layouts/</dfn> and the default Layout file funnily enough will be <dfn>application/views/layouts/default.php</dfn>.</p>
-	
+		Partials can go anywhere in your views folder (or themes and modules view folder) like <dfn>application/views/header.php</dfn>.
+	</p>
+
 	<p>
-		Of course for many websites and applications you won't want <em>every</em> page to look the same, so for that we have the <kbd><a href="library.html#set_layout">set_layout()</a></kbd> method.
-		You simply provide the name of the layout in the layouts folder and your page will be wrapped with that layout instead.
+		To attach a Partial (from a view file) to a Layout you will need to use the <kbd><a href="library.html#set_partial">set_partial()</a></kbd> method.
+		Give the partial name, then enter it's path and optionally give it some special data that will only exist for that partial.
+	</p>
+
+	<p>
+		You can also inject strings into the template as partials using the <kbd><a href="library.html#inject_partial">inject_partial()</a></kbd> method.
+		This method is almost identical to <kbd><a href="library.html#set_partial">set_partial()</a></kbd> but the second argument is a HTML string and not a view file.
 	</p>
 
 	<h3>Example (PHP)</h3>
@@ -73,8 +79,7 @@ Layouts
 	<pre>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 	&lt;head&gt;
-		&lt;title&gt;&lt;?php echo $template['title']; ?&gt;&lt;/title&gt;
-		&lt;?php echo $template['metadata']; ?&gt;
+		&lt;?php echo $template['partials']['header']; ?&gt;
 	&lt;/head&gt;
 	&lt;body&gt;
 		&lt;h1&gt;&lt;?php echo $template['title']; ?&gt;&lt;/h1&gt;
@@ -89,8 +94,7 @@ Layouts
 	<pre>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 	&lt;head&gt;
-		&lt;title&gt;{$template.title}&lt;/title&gt;
-		{$template.metadata}
+		{$template.partials.header}
 	&lt;/head&gt;
 	&lt;body&gt;
 		&lt;h1&gt;{$template.title}&lt;/h1&gt;

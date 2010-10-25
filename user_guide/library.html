@@ -108,7 +108,7 @@ Documentation
 
 	<a name="set_layout"></a>
 	<h2>set_layout()</h2>
-	<p>All layout files should be in the layout folder and by default will be <var>application/views/layouts/default.php</var>, but this can be changed.</p>
+	<p>All <a href="layouts.html">Layout</a> files should be in the layout folder and by default will be <var>application/views/layouts/default.php</var>, but this can be changed.</p>
 
 	<p><strong>Parameters</strong></p>
 	<ol>
@@ -132,13 +132,54 @@ Documentation
 		<li><var>$theme</var> - string REQUIRED - name of the theme.</li>
 	</ol>
 
+	<a name="set_partial"></a>
+	<h2>set_partial()</h2>
+	<p>Set <a href="partials.html">Partials</a> from view files.</p>
+
+	<p><strong>Parameters</strong></p>
+	<ol>
+		<li><var>$name</var> - string REQUIRED - assign a name to the partial.</li>
+		<li><var>$view</var> - string REQUIRED - name of the view file to look for.</li>
+		<li><var>$data</var> - array/object OPTIONAL - assign some extra data JUST for this partial.</li>
+	</ol>
+
 	<p><b>Usage</b></p>
-	<pre>
-		$this->template<br/>
-			->set_theme('funky_hotness')
-			->set_layout('two_col') // application/themes/funky_hotness/views/layouts/two_col.php
-			->build('welcome_message'); // views/welcome_message
-	</pre>
+
+	<pre>$this->template
+
+	// application/views/some_folder/header
+	->set_partial('header', 'some_folder/header')
+
+	// application/views/layouts/two_col.php
+	->set_layout('two_col')
+
+	// views/welcome_message
+	->build('welcome_message');</pre>
+	<br />
+
+	<a name="inject_partial"></a>
+	<h2>inject_partial()</h2>
+	<p>Inject a chunk of HTML as a <a href="partials.html">Partial</a>.</p>
+
+	<p><strong>Parameters</strong></p>
+	<ol>
+		<li><var>$name</var> - string REQUIRED - assign a name to the partial.</li>
+		<li><var>$string</var> - string REQUIRED - Chunk of HTML/Text/Whatever to go into the partial.</li>
+		<li><var>$data</var> - array/object OPTIONAL - assign some extra data JUST for this partial.</li>
+	</ol>
+
+	<p><b>Usage</b></p>
+
+	<pre>$this->template
+
+	// application/views/some_folder/header
+	->inject_partial('header', '&lt;h1>Hello World!&lt;/h1>')
+
+	// application/views/layouts/two_col.php
+	->set_layout('two_col')
+
+	// views/welcome_message
+	->build('welcome_message');</pre>
 	<br />
 
 	<a name="build"></a>
