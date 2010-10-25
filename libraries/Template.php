@@ -440,6 +440,21 @@ class Template
         return $this;
     }
 
+	/**
+	 * Set a the cache lifetime
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	string
+	 * @param	boolean
+	 * @return	void
+	 */
+	public function set_cache($seconds = 0)
+	{
+		$this->cache_lifetime = $seconds;
+		return $this;
+	}
+
 
     /**
      * enable_parser
