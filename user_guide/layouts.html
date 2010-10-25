@@ -3,7 +3,7 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Template Library</title>
+<title>Template Library &#8250; Layouts</title>
 
 <style type='text/css' media='all'>@import url('./userguide.css');</style>
 <link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
@@ -37,7 +37,8 @@
 <tr>
 <td id="breadcrumb">
 <a href="http://philsturgeon.co.uk/code/codeigniter-template">Template</a> &nbsp;&#8250;&nbsp;
-Documentation
+<a href="index.html">Documentation</a> &nbsp;&#8250;&nbsp;
+Layouts
 </td>
 </tr>
 </table>
@@ -50,46 +51,56 @@ Documentation
 <div id="content">
 	<h1>Template</h1>
 
-	<p>The Template library helps your build complex views with CodeIgniter. It has logic to work with themes & modules and helps add your title, meta-data, breadcrumbs and partial views.</p>
+	<h2>Layouts</h2>
 
-	<a name="license"></a>
-	<h2>License</h2>
+	<p>
+		Layouts in this library are very similar to layouts in Ruby on Rails and other frameworks. The basic idea is that most of your pages will share the same
+		header, footer, wrapping navigation, etc and only the actual body of the page will change. Using this logic you can avoid repeating yourself and having lots of similar HTML.
+	</p>
 
-	<p>Template is released under the "Don't Be a Dick Public License", which you can read in all its glory here: <a href="http://philsturgeon.co.uk/code/dbad-license" target="_blank">http://philsturgeon.co.uk/code/dbad-license</a></p>
+	<p>
+		All layouts exist in <dfn>application/views/layouts/</dfn> and the default Layout file funnily enough will be <dfn>application/views/layouts/default.php</dfn>.</p>
+	
+	<p>
+		Of course for many websites and applications you won't want <em>every</em> page to look the same, so for that we have the <kbd><a href="library.html#set_layout">set_layout()</a></kbd> method.
+		You simply provide the name of the layout in the layouts folder and your page will be wrapped with that layout instead.
+	</p>
 
-	<a name="install"></a>
-	<h2>Installation</h2>
+	<h3>Example (PHP)</h3>
 
-	<ol>
-		<li>Download the latest version: <a href="http://github.com/philsturgeon/codeigniter-template/zipball/master">http://github.com/philsturgeon/codeigniter-template/zipball/master</a></li>
-		<li>Copy the files from this package to the correspoding folder in your application folder. For example, copy Template/config/template.php to application/config/template.php.</li>
-	</ol>
+	<p>The easiest layout in the world is this:</p>
 
-	<a name="loading"></a>
-	<h2>Loading Template</h2>
+	<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;&lt;?php echo $template['title']; ?&gt;&lt;/title&gt;
+		&lt;?php echo $template['metadata']; ?&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;h1&gt;&lt;?php echo $template['title']; ?&gt;&lt;/h1&gt;
+		&lt;?php echo $template['body']; ?&gt;
+	&lt;/body&gt;
+&lt;/html&gt;</pre>
 
-	<p>You load Template just link any other library:</p>
-	<pre>$this->load->library('template');</pre>
+	<h3>Example (Parser)</h3>
 
-	<p>You can also autoload the library.</p>
+	<p>Using the parser syntax you can do this instead:</p>
 
-	<a name="config"></a>
-	<h2>Configuration Options</h2>
+	<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;{$template.title}&lt;/title&gt;
+		{$template.metadata}
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;h1&gt;{$template.title}&lt;/h1&gt;
+		{$template.body}
+	&lt;/body&gt;
 
-	<p>To change configuration options simply edit the application/config/template.php file.</p>
-
-	<h3>Config</h3>
-
-	<p>Edit the template $config array as needed:</p>
-	<ul>
-		<li><var>$config['parser_enabled']</var> - When set to <kbd>TRUE</kbd> this will use the Parser library.</li>
-		<li><var>$config['parser_body_enabled']</var> - The parser can be enabled for the layouts but disabled for the body view files by setting this to <kbd>FALSE</kbd>.</li>
-		<li><var>$config['title_separator']</var> - What string should be used to separate title segments sent via <kbd>$this->template->title('Foo', 'Bar');</kbd>.</li>
-		<li><var>$config['theme']</var> - Which theme should be used by default, empty for none.</li>
-		<li><var>$config['theme_locations']</var> - Store your themes in many places, similar to the way "Application Packages" are used.</li>
-	</ul>
+&lt;/html&gt;</pre>
 
 	<p class="important"><strong>NOTE:</strong> You can only use the Parser if you have also installed a Parser extensions like <a href="http://philsturgeon.co.uk/code/codeighniter-dwoo" target="_blank">codeigniter-dwoo</a>. This is because CI_Parser does not play nicely with arrays.</p>
+
 
 </div>
 <!-- END CONTENT -->
