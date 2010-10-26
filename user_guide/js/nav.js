@@ -15,10 +15,13 @@ function create_menu(basepath)
 
 		'<h3>Basic Info</h3>' +
 		'<ul>' +
+		'	<li><a href="'+base+'changelog.html">Changelog</a></li>' +
 		'	<li><a href="'+base+'index.html#license">License</a></li>' +
 		'	<li><a href="http://bitbucket.org/philsturgeon/codeigniter-template">BitBucket</a></li>' +
 		'	<li><a href="http://github.com/philsturgeon/codeigniter-template">GitHub</a></li>' +
 		'</ul>' +
+
+		'</td><td class="td_sep" valign="top">' +
 
 		'<h3>Introduction</h3>' +
 		'<ul>' +
@@ -26,8 +29,6 @@ function create_menu(basepath)
 			'<li><a href="'+base+'index.html#loading">Loading the Library</a></li>' +
 			'<li><a href="'+base+'index.html#config">Configuration</a></li>' +
 		'</ul>' +
-
-		'</td><td class="td_sep" valign="top">' +
 
 		'<h3>General Topics</h3>' +
 		'<ul>' +
