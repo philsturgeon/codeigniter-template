@@ -92,6 +92,12 @@ class Template
 			// Let's use this obvious default
 			$this->_theme_locations = array(APPPATH . 'themes/');
 		}
+		
+		// Theme was set
+		if ($this->_theme)
+		{
+			$this->set_theme($this->_theme);
+		}
 
 		// If the parse is going to be used, best make sure it's loaded
 		if ($this->_parser_enabled === TRUE)
