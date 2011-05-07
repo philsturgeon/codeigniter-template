@@ -40,8 +40,8 @@ class Template
 
 	private $_is_mobile = FALSE;
 
-	// Seconds that cache will be alive for
-	private $cache_lifetime = 0;//7200;
+	// Minutes that cache will be alive for
+	private $cache_lifetime = 0;
 
 	private $_ci;
 
@@ -455,9 +455,9 @@ class Template
 	 * @param	boolean
 	 * @return	void
 	 */
-	public function set_cache($seconds = 0)
+	public function set_cache($minutes = 0)
 	{
-		$this->cache_lifetime = $seconds;
+		$this->cache_lifetime = $minutes;
 		return $this;
 	}
 
