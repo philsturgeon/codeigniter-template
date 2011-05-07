@@ -10,7 +10,7 @@
  * @category		Libraries
  * @author			Philip Sturgeon
  * @license			http://philsturgeon.co.uk/code/dbad-license
- * @link			http://philsturgeon.co.uk/code/codeigniter-template
+ * @link			http://getsparks.org/packages/template/show
  */
 class Template
 {
