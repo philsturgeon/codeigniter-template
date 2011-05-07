@@ -7,7 +7,7 @@ It has logic to work with themes & modules and helps add your title, meta-data, 
 ## Requirements
 
 1. PHP 5.1+
-2. CodeIgniter 1.6.x - 2.0-dev
+2. CodeIgniter 2.0.0+
 
 ## Documentation
 

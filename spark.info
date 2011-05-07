@@ -1,4 +1,4 @@
-name: birdseed
+name: template
 
 # This is the current version of this spark. All sparks should be in
 #  x.x.x format. Validation will fail otherwise.
