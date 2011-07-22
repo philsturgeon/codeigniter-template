@@ -186,7 +186,6 @@ class Template
 	 *
 	 * @access	public
 	 * @param	string
-
 	 * @return	void
 	 */
 	public function build($view, $data = array(), $return = FALSE)
@@ -214,7 +213,7 @@ class Template
 		// Assign by reference, as all loaded views will need access to partials
 		$this->_data['template'] =& $template;
 
-		foreach( $this->_partials as $name => $partial )
+		foreach ($this->_partials as $name => $partial)
 		{
 			// We can only work with data arrays
 			is_array($partial['data']) OR $partial['data'] = (array) $partial['data'];
@@ -245,10 +244,10 @@ class Template
 		$this->_ci->output->set_header('Pragma: no-cache');
 
 		// Let CI do the caching instead of the browser
-		$this->_ci->output->cache( $this->cache_lifetime );
+		$this->_ci->output->cache($this->cache_lifetime);
 
 		// Test to see if this file
-		$this->_body = $this->_find_view( $view, array(), $this->_parser_body_enabled );
+		$this->_body = $this->_find_view($view, array(), $this->_parser_body_enabled);
 
 		// Want this file wrapped with a layout file?
 		if ($this->_layout)
@@ -623,9 +622,11 @@ class Template
 	// find layout files, they could be mobile or web
 	private function _find_view_folder()
 	{
-		if (isset($this->_ci->load->_ci_cached_vars['template_views']))
+		if ($this->_ci->load->get_var('template_views'))
 		{
-			return $this->_ci->load->_ci_cached_vars['template_views'];
+			var_dump($this->_ci->load->get_var('template_views'));
+			exit;
+			return $this->_ci->load->get_var('template_views');
 		}
 
 		// Base view folder
@@ -657,7 +658,9 @@ class Template
 		}
 
 		// If using themes store this for later, available to all views
-		return $this->_ci->load->_ci_cached_vars['template_views'] = $view_folder;
+		$this->_ci->load->vars('template_views', $view_folder);
+		
+		return $view_folder;
 	}
 
 	// A module view file can be overriden in a theme
@@ -695,21 +698,21 @@ class Template
 			if ($this->_parser_enabled === TRUE AND $parse_view === TRUE)
 			{
 				// Load content and pass through the parser
-				$content = $this->_ci->parser->parse_string($this->_ci->load->_ci_load(array(
-					'_ci_path' => $override_view_path.$view.self::_ext($view),
-					'_ci_vars' => $data,
-					'_ci_return' => TRUE
-				)), $data, TRUE);
+				$content = $this->_ci->parser->parse_string($this->_ci->load->file(
+					$override_view_path.$view.self::_ext($view), 
+					TRUE
+				), $data);
 			}
 
 			else
 			{
+				$this->_ci->load->vars($data);
+				
 				// Load it directly, bypassing $this->load->view() as ME resets _ci_view
-				$content = $this->_ci->load->_ci_load(array(
-					'_ci_path' => $override_view_path.$view.self::_ext($view),
-					'_ci_vars' => $data,
-					'_ci_return' => TRUE
-				));
+				$content = $this->_ci->load->file(
+					$override_view_path.$view.self::_ext($view),
+					TRUE
+				);
 			}
 		}
 
@@ -720,10 +723,10 @@ class Template
 			$content = ($this->_parser_enabled === TRUE AND $parse_view === TRUE)
 
 				// Parse that bad boy
-				? $this->_ci->parser->parse($view, $data, TRUE )
+				? $this->_ci->parser->parse($view, $data, TRUE)
 
 				// None of that fancy stuff for me!
-				: $this->_ci->load->view($view, $data, TRUE );
+				: $this->_ci->load->view($view, $data, TRUE);
 		}
 
 		return $content;
@@ -749,7 +752,7 @@ class Template
 		}
 
 		// Is there a module? Make sure it is not named the same as the method or controller
-		if ( ! empty($this->_module) AND !in_array($this->_module, $title_parts))
+		if ( ! empty($this->_module) AND ! in_array($this->_module, $title_parts))
 		{
 			$title_parts[] = $this->_module;
 		}
@@ -762,7 +765,7 @@ class Template
 
 	private function _ext($file)
 	{
-		return pathinfo($file, PATHINFO_EXTENSION) ? '' : EXT;
+		return pathinfo($file, PATHINFO_EXTENSION) ? '' : '.php';
 	}
 }
 
