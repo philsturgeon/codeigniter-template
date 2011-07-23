@@ -624,8 +624,6 @@ class Template
 	{
 		if ($this->_ci->load->get_var('template_views'))
 		{
-			var_dump($this->_ci->load->get_var('template_views'));
-			exit;
 			return $this->_ci->load->get_var('template_views');
 		}
 
