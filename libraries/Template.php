@@ -373,6 +373,17 @@ class Template
 	}
 
 	/**
+	 * Get the current theme
+	 *
+	 * @access public
+	 * @return string	The current theme
+	 */
+	 public function get_theme()
+	 {
+	 	return $this->_theme;
+	 }
+
+	/**
 	 * Get the current theme path
 	 *
 	 * @access	public
