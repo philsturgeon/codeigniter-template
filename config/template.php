@@ -45,7 +45,7 @@ $config['title_separator'] = ' | ';
 
 /*
 |--------------------------------------------------------------------------
-| Theme
+| Layout
 |--------------------------------------------------------------------------
 |
 | Which layout file should be used? When combined with theme it will be a layout file in that theme
