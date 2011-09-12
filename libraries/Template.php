@@ -61,7 +61,7 @@ class Template
 			$this->initialize($config);
 		}
 
-		log_message('debug', 'Template class Initialized');
+		log_message('debug', 'Template Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
