@@ -61,7 +61,7 @@ class Template
 			$this->initialize($config);
 		}
 
-		log_message('debug', 'Template class Initialized');
+		log_message('debug', 'Template Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -710,7 +710,7 @@ class Template
 				$content = $this->_ci->parser->parse_string($this->_ci->load->file(
 					$override_view_path.$view.self::_ext($view), 
 					TRUE
-				), $data);
+				), $data, TRUE);
 			}
 
 			else
