@@ -322,9 +322,10 @@ class Template
 	 * @param	  string	$name		keywords, description, etc
 	 * @param	  string	$content	The content of meta data
 	 * @param	  string	$type		Meta-data comes in a few types, links for example
+     * @param     array     $extra      Array of additional params (i.e. device icon sizes)
 	 * @return	void
 	 */
-	public function set_metadata($name, $content, $type = 'meta')
+	public function set_metadata($name, $content, $type = 'meta', $extra = FALSE)
 	{
 		$name = htmlspecialchars(strip_tags($name));
 		$content = htmlspecialchars(strip_tags($content));
@@ -334,15 +335,27 @@ class Template
 		{
 			$content = preg_replace('/[\s]+/', ', ', trim($content));
 		}
+        
+        // Add additional elements to meta (ie sizes="114x114")
+        $add = '';
+        $key = '';
+        if ($extra)
+        {
+            foreach ($extra as $k => $v)
+            {
+                $add .= $k.'="'.$v.'" ';
+                $key = '_'.$k.$v;
+            }
+        }
 
 		switch($type)
 		{
 			case 'meta':
-				$this->_metadata[$name] = '<meta name="'.$name.'" content="'.$content.'" />';
+				$this->_metadata[$name] = '<meta name="'.$name.'" content="'.$content.'" '.$add.' />';
 			break;
 
 			case 'link':
-				$this->_metadata[$content] = '<link rel="'.$name.'" href="'.$content.'" />';
+				$this->_metadata[$content] = '<link rel="'.$name.'" href="'.$content.'" '.$add.' />';
 			break;
 		}
 
