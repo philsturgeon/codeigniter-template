@@ -77,11 +77,6 @@ class Template
 	{
 		foreach ($config as $key => $val)
 		{
-			if ($key == 'theme' AND $val != '')
-			{
-				$this->set_theme($val);
-				continue;
-			}
 
 			$this->{'_'.$key} = $val;
 		}
@@ -252,7 +247,7 @@ class Template
 		// Want this file wrapped with a layout file?
 		if ($this->_layout)
 		{
-			// Added to $this->_data['template'] by refference
+			// Added to $this->_data['template'] by reference
 			$template['body'] = $this->_body;
 
 			// Find the main body and 3rd param means parse if its a theme view (only if parser is enabled)
@@ -288,7 +283,7 @@ class Template
 
 
 	/**
-	 * Put extra javascipt, css, meta tags, etc before all other head data
+	 * Put extra javascript, css, meta tags, etc before all other head data
 	 *
 	 * @access	public
 	 * @param	 string	$line	The line being added to head
@@ -302,7 +297,7 @@ class Template
 
 
 	/**
-	 * Put extra javascipt, css, meta tags, etc after other head data
+	 * Put extra javascript, css, meta tags, etc after other head data
 	 *
 	 * @access	public
 	 * @param	 string	$line	The line being added to head
@@ -695,13 +690,13 @@ class Template
 			}
 		}
 
-		// Not found it yet? Just load, its either in the module or root view
+		// Not found it yet? Just load, it's either in the module or root view
 		return self::_load_view($view, $this->_data + $data, $parse_view);
 	}
 
 	private function _load_view($view, array $data, $parse_view = TRUE, $override_view_path = NULL)
 	{
-		// Sevear hackery to load views from custom places AND maintain compatibility with Modular Extensions
+		// Severe hackery to load views from custom places AND maintain compatibility with Modular Extensions
 		if ($override_view_path !== NULL)
 		{
 			if ($this->_parser_enabled === TRUE AND $parse_view === TRUE)
