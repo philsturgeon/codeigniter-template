@@ -632,17 +632,16 @@ class Template
 
 	/**
 	 * load_view
-	 * Load views from theme paths
+	 * Load views from theme paths if they exist.
 	 *
 	 * @access	public
 	 * @param	string	$view
-	 * @param	array	$data
-	 * @param	bool	$parse_view
+	 * @param	mixed	$data
 	 * @return	array
 	 */
-	public function load_view($view, array $data, $parse_view = TRUE)
+	public function load_view($view, $data = array())
 	{
-		return $this->_find_view($view, $data, $parse_view);
+		return $this->_find_view($view, (array)$data);
 	}
 
 	// find layout files, they could be mobile or web
