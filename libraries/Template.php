@@ -630,6 +630,20 @@ class Template
 		return file_exists(self::_find_view_folder().'layouts/' . $layout . self::_ext($layout));
 	}
 
+	/**
+	 * load_view
+	 * Load views from theme paths if they exist.
+	 *
+	 * @access	public
+	 * @param	string	$view
+	 * @param	mixed	$data
+	 * @return	array
+	 */
+	public function load_view($view, $data = array())
+	{
+		return $this->_find_view($view, (array)$data);
+	}
+
 	// find layout files, they could be mobile or web
 	private function _find_view_folder()
 	{
