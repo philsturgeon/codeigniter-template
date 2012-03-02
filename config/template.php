@@ -65,10 +65,10 @@ $config['layout'] = 'default';
 |	!Work only with Asset library!
 |
 |	Enable Preloading assets like js, css or partials with meta. 
-|	This feature is very helpfull when you loading assets demand on what
+|	This feature is very helpfull when loading assets demand on what
 |	module or controller or method is load.
 |   
-|	Algorithm of loading consist of few steps.  
+|	Algorithm loading consist of few steps.  
 |   	1. load common config
 |		2. is_hmvc
 |			2.1 load module common config
@@ -80,8 +80,8 @@ $config['layout'] = 'default';
 | 
 |	The rules of naming config files.
 |	Every config must be in the correspond config folder
-|		application -> common.php - the config file for all application
-|		application -> modules -> {module_name} -> common_module.php - the config file for all module
+|		application -> common.php - the config file for whole application
+|		application -> modules -> {module_name} -> common_module.php - the config file for whole module
 |		application -> modules -> {module_name} -> {controller_name} -> {module_name}_{controller_name} - the config file for module controller
 |		application -> modules -> {module_name} -> {controller_name} -> {action_name} -> {module_name}_{controller_name}_{action_name} - the config file for module controller action
 |  
