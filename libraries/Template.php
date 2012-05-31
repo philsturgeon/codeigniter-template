@@ -278,9 +278,9 @@ class Template
 	public function title()
 	{
 		// If we have some segments passed
-		if ($title_segments =& func_get_args())
+		if (func_num_args() >= 1)
 		{
-			$this->_title = implode($this->_title_separator, $title_segments);
+			$this->_title = implode($this->_title_separator, func_get_args());
 		}
 
 		return $this;
