@@ -280,7 +280,8 @@ class Template
 		// If we have some segments passed
 		if (func_num_args() >= 1)
 		{
-			$this->_title = implode($this->_title_separator, func_get_args());
+			$title_segments = func_get_args();
+			$this->_title = implode($this->_title_separator, $title_segments);
 		}
 
 		return $this;
