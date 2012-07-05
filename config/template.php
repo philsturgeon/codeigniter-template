@@ -45,6 +45,32 @@ $config['title_separator'] = ' | ';
 
 /*
 |--------------------------------------------------------------------------
+| Progressive Build Title
+|--------------------------------------------------------------------------
+|
+| Add successive calls to $this->template->title() to an array for combination later
+|
+|   Default: FALSE
+|
+*/
+
+$config['progressive_build_title'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| Reverse Title Order
+|--------------------------------------------------------------------------
+|
+| If progressive build is turned on, do we reverse the title order before rendering?
+|
+|   Default: TRUE
+|
+*/
+
+$config['reverse_title_order'] = TRUE;
+
+/*
+|--------------------------------------------------------------------------
 | Layout
 |--------------------------------------------------------------------------
 |

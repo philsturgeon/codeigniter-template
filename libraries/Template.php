@@ -24,7 +24,7 @@ class Template
 	private $_layout_subdir = ''; // Layouts and partials will exist in views/layouts
 	// but can be set to views/foo/layouts with a subdirectory
 
-	private $_title = '';
+	private $_title = array();
 	private $_metadata = array();
 
 	private $_partials = array();
@@ -205,7 +205,10 @@ class Template
 		}
 
 		// Output template variables to the template
-		$template['title']	= $this->_title;
+		if($this->_reverse_title_order){
+			$this->_title = array_reverse($this->_title);
+		}
+		$template['title']	= implode($this->_title_separator, $this->_title);
 		$template['breadcrumbs'] = $this->_breadcrumbs;
 		$template['metadata']	= implode("\n\t\t", $this->_metadata);
 		$template['partials']	= array();
@@ -281,7 +284,16 @@ class Template
 		if (func_num_args() >= 1)
 		{
 			$title_segments = func_get_args();
-			$this->_title = implode($this->_title_separator, $title_segments);
+
+			if($this->_progressive_build_title){
+				if(count($title_segments) > 1){
+					$this->_title = array_merge($this->_title, $title_segments);
+				} else {
+					$this->_title[] = $title_segments[0];
+				}
+			} else {
+				$this->_title = $title_segments;
+			}
 		}
 
 		return $this;
@@ -782,7 +794,7 @@ class Template
 		}
 
 		// Glue the title pieces together using the title separator setting
-		$title = humanize(implode($this->_title_separator, $title_parts));
+		$title[] = humanize(implode($this->_title_separator, $title_parts));
 
 		return $title;
 	}
