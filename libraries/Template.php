@@ -278,8 +278,9 @@ class Template
 	public function title()
 	{
 		// If we have some segments passed
-		if ($title_segments =& func_get_args())
+		if (func_num_args() >= 1)
 		{
+			$title_segments = func_get_args();
 			$this->_title = implode($this->_title_separator, $title_segments);
 		}
 
@@ -628,6 +629,20 @@ class Template
 
 		// Otherwise look in the normal places
 		return file_exists(self::_find_view_folder().'layouts/' . $layout . self::_ext($layout));
+	}
+
+	/**
+	 * load_view
+	 * Load views from theme paths if they exist.
+	 *
+	 * @access	public
+	 * @param	string	$view
+	 * @param	mixed	$data
+	 * @return	array
+	 */
+	public function load_view($view, $data = array())
+	{
+		return $this->_find_view($view, (array)$data);
 	}
 
 	// find layout files, they could be mobile or web
