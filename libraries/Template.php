@@ -662,6 +662,12 @@ class Template
 			$view_folder = $this->_theme_path.'views/';
 		}
 
+		// Things like views/admin/web/view admin = subdir
+		if ($this->_layout_subdir)
+		{
+			$view_folder .= $this->_layout_subdir.'/';
+		}
+
 		// Would they like the mobile version?
 		if ($this->_is_mobile === TRUE AND is_dir($view_folder.'mobile/'))
 		{
@@ -673,12 +679,6 @@ class Template
 		else if (is_dir($view_folder.'web/'))
 		{
 			$view_folder .= 'web/';
-		}
-
-		// Things like views/admin/web/view admin = subdir
-		if ($this->_layout_subdir)
-		{
-			$view_folder .= $this->_layout_subdir.'/';
 		}
 
 		// If using themes store this for later, available to all views
