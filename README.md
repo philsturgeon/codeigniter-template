@@ -11,5 +11,4 @@ It has logic to work with themes & modules and helps add your title, meta-data, 
 
 ## Documentation
 
-Look in user_guide or <a href="http://philsturgeon.co.uk/demos/codeigniter-template/user_guide/">click here</a>.
-Yeah, I actually wrote some documentation! :-o
+Open `user_guide/index.html` in your browser for docs.
