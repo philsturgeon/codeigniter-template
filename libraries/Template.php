@@ -46,6 +46,8 @@ class Template
 	private $_ci;
 
 	private $_data = array();
+	
+	private $_scripts = array();
 
 	/**
 	 * Constructor - Sets Preferences
@@ -55,6 +57,7 @@ class Template
 	function __construct($config = array())
 	{
 		$this->_ci =& get_instance();
+		$this->_ci->load->helper('url');
 
 		if ( ! empty($config))
 		{
@@ -209,6 +212,7 @@ class Template
 		$template['breadcrumbs'] = $this->_breadcrumbs;
 		$template['metadata']	= implode("\n\t\t", $this->_metadata);
 		$template['partials']	= array();
+		$template['scripts'] = $this->script();
 
 		// Assign by reference, as all loaded views will need access to partials
 		$this->_data['template'] =& $template;
@@ -629,6 +633,70 @@ class Template
 
 		// Otherwise look in the normal places
 		return file_exists(self::_find_view_folder().'layouts/' . $layout . self::_ext($layout));
+	}
+	
+	/**
+	* script 
+	* Adds script to the scripts stack or returns rendered output.
+	*
+	* @access public
+	* @param mixed string or array of script paths
+	* @return mixed object on appending or string on rendering.
+	*/
+	public function script($script = false)
+	{
+		if ($script) 
+		{
+			$this->_append_script($script);
+			return $this;
+		}
+		else
+		{
+			return $this->_render_scripts();
+		}
+	}
+	
+	/**
+	* _append_script
+	* Appends script tag on the scripts stack.
+	*
+	* @access private 
+	* @param mixed string or array of script paths
+	* @return void
+	*/
+	private function _append_script($script)
+	{
+		if (is_array($script)) 
+		{
+			foreach($script as $url)
+			{
+				$this->_append_script($url);
+			}
+		}
+		else
+		{
+			if (preg_match('#http://#', $script))
+			{
+				$script_tag = "<script type='text/javascript' src='$script'></script>";
+			}
+			else
+			{
+				$script_tag = "<script type='text/javascript' src='".base_url($script)."'></script>";
+			}
+			array_push($this->_scripts, $script_tag);
+		}
+	}
+	
+	/**
+	* _render_scripts
+	* Renders current scripts in the scripts stack.
+	*
+	* @access private 
+	* @return string script paths separated by end of line delimiter.
+	*/
+	private function _render_scripts()
+	{
+		return implode("\n", $this->_scripts);
 	}
 
 	/**
