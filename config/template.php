@@ -60,6 +60,59 @@ $config['layout'] = 'default';
 
 /*
 |--------------------------------------------------------------------------
+| loading config
+|--------------------------------------------------------------------------
+|	!Work only with Asset library!
+|
+|	Enable Preloading assets like js, css or partials with meta. 
+|	This feature is very helpfull when loading assets demand on what
+|	module or controller or method is load.
+|   
+|	Algorithm loading consist of few steps.  
+|   	1. load common config
+|		2. is_hmvc
+|			2.1 load module common config
+|			2.3 load controller config
+|			2.4 load action config
+|		3. else
+|			3.1 load controller config
+|			3.2 load action config
+| 
+|	The rules of naming config files.
+|	Every config must be in the correspond config folder
+|		application -> common.php - the config file for whole application
+|		application -> modules -> {module_name} -> common_module.php - the config file for whole module
+|		application -> modules -> {module_name} -> {controller_name} -> {module_name}_{controller_name} - the config file for module controller
+|		application -> modules -> {module_name} -> {controller_name} -> {action_name} -> {module_name}_{controller_name}_{action_name} - the config file for module controller action
+|  
+|	Everybody config has the following structure:
+|	
+|	* title -> string 
+|		the title from "head" section. Can be null.  
+|	* layout -> string 
+|	* metas 
+|		metas['name'] -> assoc array
+|			key assign to attribute "name" and value assing to
+|			attribute "content" on tag meta
+|		metas['http-equiv'] -> assoc array
+|		key assign to attribute "http-equiv" and value assign to attribute "content" on tag meta
+|	* partials -> assoc array
+|		key   - name of partial
+|		value - path to partial
+|
+|	* css
+|		css['url']
+|		css['path']
+|	* js
+|		js['url']
+|		js['path']
+|
+|	   
+|	Default: FALSE
+*/
+$config['preload_config'] = false;
+/*
+|--------------------------------------------------------------------------
 | Theme
 |--------------------------------------------------------------------------
 |

@@ -36,6 +36,9 @@ class Template
 	private $_parser_enabled = TRUE;
 	private $_parser_body_enabled = TRUE;
 
+	private $_preload_config = FALSE;
+	private $_template_settings = array();
+
 	private $_theme_locations = array();
 
 	private $_is_mobile = FALSE;
@@ -120,6 +123,18 @@ class Template
 
 		// We'll want to know this later
 		$this->_is_mobile	= $this->_ci->agent->is_mobile();
+
+		// if the load_config is true load "preload" template assets
+		if( $this->_preload_config === TRUE ){
+			
+			$this->_ci->load->library('asset');
+			$this->_ci->asset->set_theme($this->_theme);
+			$this->load_config();
+			$this->load_layout();
+			$this->load_metas();
+			$this->load_assets();
+			$this->load_partials();
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -645,6 +660,309 @@ class Template
 		return $this->_find_view($view, (array)$data);
 	}
 
+
+	
+	/*
+	*
+	*	
+	*	
+	*/
+	private function load_config(){
+	
+		$this->_load_common_config();	
+		/*
+		*
+		* is module
+		*/
+		if(!empty($this->_module)){
+			$this->_load_module_config();
+			$this->_load_module_controller_config();
+			$this->_load_module_controller_action_config();
+		}else{
+			$this->_load_controller_config();
+			$this->_load_controller_action_config();
+		}
+	}
+	
+	
+	private function _load_common_config(){
+	
+		/*
+		*	. load config common
+		*	suppress errors in the event a config file doesn't exist
+		*/
+		$common_config = "common";
+		$this->_ci->load->config($common_config,TRUE,TRUE);
+		$this->_parse_load_config($common_config);
+	}
+	
+	
+	private function _load_module_config(){
+	
+		/*
+		*
+		* 	load common module config
+		*	suppress errors in the event a config file doesn't exist
+		*/
+		$module_config = "{$this->_module}/common_module";
+		$this->_ci->load->config($module_config,TRUE,TRUE);
+		$this->_parse_load_config("common_module");
+	}
+	
+	private function _load_module_controller_config(){
+	
+		/*
+		*
+		*	load module controller config
+		*	suppress errors in the event a config file doesn't exist
+		*/
+		$module_controller_config = "{$this->_module}/{$this->_module}_{$this->_controller}";
+		$this->_ci->load->config($module_controller_config,TRUE,TRUE);
+		$this->_parse_load_config("{$this->_module}_{$this->_controller}");
+	}
+	
+	
+	private function _load_module_controller_action_config(){
+	
+		/*
+		*	
+		*	load module controller action config
+		*	suppress errors in the event a config file doesn't exist
+		*/
+		$module_controller_action_config = "{$this->_module}/{$this->_module}_{$this->_controller}_{$this->_method}";
+		$this->_ci->load->config($module_controller_action_config,TRUE,TRUE);
+		$this->_parse_load_config("{$this->_module}_{$this->_controller}_{$this->_method}");
+	}
+	
+	
+	private function _load_controller_config(){
+	
+		/*
+		*
+		*	load controller config
+		*	suppress errors in the event a config file doesn't exist
+		*/
+		$controller_config = $this->_controller;
+		$this->_ci->load->config($controller_config,TRUE,TRUE);
+		$this->_parse_load_config($controller_config);
+	}
+	
+	private function _load_controller_action_config(){
+		/*
+		*
+		*	load controller action config
+		*	suppress errors in the event a config file doesn't exist
+		*/
+		$controller_action_config = $this->_method;
+		$this->_ci->load->config($controller_action_config,TRUE,TRUE);
+		$this->_parse_load_config($controller_action_config);
+		
+	}
+	
+	
+	private function _parse_load_config($config = ''){
+	
+		$config_array = $this->_ci->config->item($config);
+		/*
+		*	1. is config exists
+		*	2. is config array
+		*/
+		if( $config_array !== FALSE && is_array($config_array) ){
+		
+			/*
+			*
+			*	set layout
+			*/
+			$this->_template_settings['layout'] = !empty($config_array['layout']) && is_string($config_array['layout'])?$config_array['layout']:$this->_template_settings['layout'];
+			
+			/*
+			*
+			*	set title
+			*/
+			$this->_template_settings['title'] = !empty($config_array['title']) && is_string($config_array['title'])?$config_array['title']:$this->_template_settings['title'];
+			/*
+			*	
+			*	set metas
+			*/
+			$metas = array( 'name', 'http-equiv' );
+			foreach( $metas as $meta ){
+				if(!empty($config_array['metas'][$meta]) && is_array($config_array['metas'][$meta])){
+					$this->_template_settings['metas'][$meta] = $config_array['metas'][$meta]; 
+				}
+			}
+			
+			/*
+			*
+			* set css
+			*/
+			$css = array( 'url', 'path' );
+			foreach( $css as $type ){
+				if(!empty($config_array['css'][$type]) && is_array($config_array['css'][$type])){
+					$this->_template_settings['css'][$config][$type] = $config_array['css'][$type];
+				}
+			}
+			
+			/*
+			*
+			* set js
+			*
+			*/
+			$js = array( 'url' ,'path' );
+			foreach( $js as $type ){
+				if(!empty($config_array['js'][$type]) && is_array($config_array['js'][$type])){
+					$this->_template_settings['js'][$config][$type] = $config_array['js'][$type];
+				}
+			}
+			/*
+			*	
+			*	set partials
+			*/
+			$this->_template_settings['partials'] = !empty($config_array['partials'])?$config_array['partials']:$this->_template_settings['partials'];
+		}
+	}
+
+	private function load_layout(){
+		
+		if( !empty($this->_template_settings['layout']) &&
+			$this->layout_exists($this->_template_settings['layout'])){
+			$this->set_layout($this->_template_settings['layout']);
+		}
+		
+		if( !empty($this->_template_settings['title']) ){
+		
+			$this->title($this->_template_settings['title']);
+		}
+	}
+	
+	
+	private function load_metas(){
+	
+		/*
+		*
+		* load metas with attribute name
+		*/
+		if( !empty($this->_template_settings['metas']['name']) ){
+			foreach($this->_template_settings['metas']['name'] as $name => $content){
+				$this->set_metadata($name,$content);
+			}
+		}
+		
+		/*
+		*
+		*	load metas with attribute http-equiv
+		*/
+		if( !empty($this->_template_settings['metas']['http-equiv']) ){
+			foreach($this->_template_settings['metas']['http-equiv'] as $http_equiv => $content){
+				$meta = '<meta http-equiv="'.htmlspecialchars($http_equiv).'" content="'.htmlspecialchars($content).'" />';
+				$this->append_metadata($meta);
+			}
+		}
+	}
+	
+	private function load_assets(){
+	
+		$assets_type = array('js','css');
+		
+		foreach($assets_type as $asset){
+			/*
+			*
+			* load js
+			*
+			*/
+			if(!empty($this->_template_settings[$asset])){
+			
+				/*
+				*
+				*	assets for all application
+				*
+				*/
+				if( !empty($this->_template_settings[$asset]['common']) ){
+					$this->_load_assets($asset,"_theme_",$this->_template_settings[$asset]['common']);
+				}
+				/*
+				*
+				* is module
+				*
+				*/
+				if($this->_module){
+					
+					/*
+					*
+					* common module assets
+					*/
+					if( !empty($this->_template_settings[$asset]["common_module"]) ){
+						$this->_load_assets($asset,$this->_module,$this->_template_settings[$asset]["common_module"]);
+					}
+					
+					/*
+					*
+					*  module controller assets
+					*/
+					if( !empty($this->_template_settings[$asset]["{$this->_module}_{$this->_controller}"]) ){
+						$this->_load_assets($asset,$this->_module,$this->_template_settings[$asset]["{$this->_module}_{$this->_controller}"]);
+					}
+					
+					/*
+					*	module controller action
+					*
+					*/
+					if( !empty($this->_template_settings[$asset]["{$this->_module}_{$this->_controller}_{$this->_method}"]) ){
+					
+						$this->_load_assets($asset,$this->_module,$this->_template_settings[$asset]["{$this->_module}_{$this->_controller}_{$this->_method}"]);
+					}
+				}else{
+					/*
+					*
+					* common controller assets
+					*/
+					if( !empty($this->_template_settings[$asset]["{$this->_controller}"]) ){
+						$this->_load_assets($asset,"_theme_",$this->_template_settings[$asset]["{$this->_controller}"]);
+					}
+					
+					/*
+					*
+					*  common controller action assets
+					*/
+					if( !empty($this->_template_settings[$asset]["{$this->_controller}_{$this->_action}"]) ){
+						$this->_load_assets($asset,"_theme_",$this->_template_settings[$asset]["{$this->_controller}_{$this->_action}"]);
+					}
+				}
+			}
+		}
+	}
+	
+	/*
+	* mandatory rules:
+	* $asset must has correspond method in asset library
+	* load assets 2 types:
+	*	url
+	*	path
+	*
+	*/
+	private function _load_assets($asset,$module,$asset_source){
+	
+		$assets_type = array('path','url');
+		foreach($assets_type as $asset_type){
+			if(!empty($asset_source[$asset_type])){
+			
+				$method = $asset;
+				if( method_exists($this->_ci->asset,$method) ){
+					foreach($asset_source[$asset_type] as $asset_name){
+						$this->append_metadata($this->_ci->asset->$method($asset_name,$module,array(),$asset_type));
+					}
+				}
+			}
+		}
+	}
+	
+	private function load_partials(){
+		if( !empty($this->_template_settings['partials']) ){
+			foreach($this->_template_settings['partials'] as $partial => $partial_path){
+				$this->set_partial($partial,$partial_path);
+			}
+		}
+	}
+	
 	// find layout files, they could be mobile or web
 	private function _find_view_folder()
 	{
