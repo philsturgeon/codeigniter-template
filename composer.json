@@ -1,0 +1,7 @@
+{
+    "name": "philsturgeon/codeigniter-template",
+    "description": "Template library for CodeIgniter which supports modules, themes, partial views, etc.",
+    "type": "library",
+    "minimum-stability": "stable",
+    "require": {}
+}
