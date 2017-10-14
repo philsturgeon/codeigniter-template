@@ -3,5 +3,7 @@
     "description": "Template library for CodeIgniter which supports modules, themes, partial views, etc.",
     "type": "library",
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "php" : ">=5.2"
+    }
 }
