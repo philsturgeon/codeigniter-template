@@ -675,7 +675,7 @@ class Template
 			$view_folder .= 'web/';
 		}
 
-		// Things like views/admin/web/view admin = subdir
+		// Things like views/web/admin/view admin = subdir
 		if ($this->_layout_subdir)
 		{
 			$view_folder .= $this->_layout_subdir.'/';
