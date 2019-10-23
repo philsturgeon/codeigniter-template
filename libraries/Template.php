@@ -721,11 +721,13 @@ class Template
 		{
 			if ($this->_parser_enabled === TRUE AND $parse_view === TRUE)
 			{
-				// Load content and pass through the parser
-				$content = $this->_ci->parser->parse_string($this->_ci->load->file(
-					$override_view_path.$view.self::_ext($view), 
+				$this->_ci->load->vars($data);
+				$content = $this->_ci->load->file(
+					$override_view_path.$view.self::_ext($view),
 					TRUE
-				), $data, TRUE);
+				);
+				// Load content and pass through the parser
+				$content = $this->_ci->parser->parse_string($content, $data, TRUE);
 			}
 
 			else
