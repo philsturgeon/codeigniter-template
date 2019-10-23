@@ -239,7 +239,7 @@ class Template
 		// Disable sodding IE7's constant cacheing!!
 		$this->_ci->output->set_header('Expires: Sat, 01 Jan 2000 00:00:01 GMT');
 		$this->_ci->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
-		$this->_ci->output->set_header('Cache-Control: post-check=0, pre-check=0, max-age=0');
+		$this->_ci->output->set_header('Cache-Control: post-check=0, pre-check=0, max-age=0', FALSE);
 		$this->_ci->output->set_header('Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
 		$this->_ci->output->set_header('Pragma: no-cache');
 
